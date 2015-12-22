@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiChainLib", "MultichainLib\MultiChainLib.csproj", "{F7C35562-FDD5-4124-86DF-B8BE94CF816D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiChainLib.Harness", "MultichainLib.Harness\MultiChainLib.Harness.csproj", "{E59E905D-1601-4B15-A6E5-ACE8FD89E1DB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F7C35562-FDD5-4124-86DF-B8BE94CF816D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7C35562-FDD5-4124-86DF-B8BE94CF816D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7C35562-FDD5-4124-86DF-B8BE94CF816D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7C35562-FDD5-4124-86DF-B8BE94CF816D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E59E905D-1601-4B15-A6E5-ACE8FD89E1DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E59E905D-1601-4B15-A6E5-ACE8FD89E1DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E59E905D-1601-4B15-A6E5-ACE8FD89E1DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E59E905D-1601-4B15-A6E5-ACE8FD89E1DB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
