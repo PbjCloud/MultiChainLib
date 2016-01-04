@@ -16,6 +16,7 @@ namespace MultiChainLib.Harness
                 var task = Task.Run(async () =>
                 {
                     await new Complete().RunAsync();
+//                    await new Example().RunAsync();
                 });
                 task.Wait();
             }

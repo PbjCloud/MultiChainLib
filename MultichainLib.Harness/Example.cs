@@ -137,7 +137,7 @@ namespace MultiChainLib.Harness
 
             // get it...
             Console.WriteLine("*** getrawtransaction ***");
-            var retrieved = await client.GetRawTransaction(sendResult.Result);
+            var retrieved = await client.GetRawTransactionVerboseAsync(sendResult.Result);
             retrieved.AssertOk();
             Console.WriteLine("ID: {0}", retrieved.Result.TxId);
             for(var index = 0; index < retrieved.Result.Data.Count; index++)

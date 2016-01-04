@@ -43,11 +43,47 @@ namespace MultiChainLib
             return this.ExecuteAsync<GetInfoResponse>("getinfo", 0);
         }
 
+        // only supported by PBJ Cloud...
+        public Task<JsonRpcResponse<GetServerInfoResponse>> GetServerInfoAsync()
+        {
+            return this.ExecuteAsync<GetServerInfoResponse>("getserverinfo", 0);
+        }
+
         public Task<JsonRpcResponse<string>> SendWithMetadataAsync(string address, string assetName, decimal amount, byte[] dataHex)
         {
             var theAmount = new Dictionary<string, object>();
             theAmount[assetName] = amount;
             return this.ExecuteAsync<string>("sendwithmetadata", 0, address, theAmount, this.FormatHex(dataHex));
+        }
+
+        public Task<JsonRpcResponse<string>> SendToAddressAsync(string address, string assetName, decimal amount, string comment = null,
+            string commentTo = null)
+        {
+            var theAmount = new Dictionary<string, object>();
+            theAmount[assetName] = amount;
+            return this.ExecuteAsync<string>("sendtoaddress", 0, address, theAmount, comment ?? string.Empty, 
+                commentTo ?? string.Empty);
+        }
+
+        public Task<JsonRpcResponse<string>> SendWithMetadataFromAsync(string fromAddress, string toAddress, string assetName, decimal amount, byte[] dataHex)
+        {
+            var theAmount = new Dictionary<string, object>();
+            theAmount[assetName] = amount;
+            return this.ExecuteAsync<string>("sendwithmetadatafrom", 0, fromAddress, toAddress, theAmount, this.FormatHex(dataHex));
+        }
+
+        public Task<JsonRpcResponse<string>> SendAssetToAddressAsync(string address, string assetName, decimal quantity, 
+            int nativeAmount = 0, string comment = null, string commentTo = null)
+        {
+            return this.ExecuteAsync<string>("sendassettoaddress", 0, address, assetName, quantity, nativeAmount,
+                comment ?? string.Empty, commentTo ?? string.Empty);
+        }
+
+        public Task<JsonRpcResponse<string>> SendAssetFromAsync(string fromAddress, string toAddress, string assetName, decimal quantity,
+            int nativeAmount = 0, string comment = null, string commentTo = null)
+        {
+            return this.ExecuteAsync<string>("sendassetfrom", 0, fromAddress, toAddress, assetName, quantity, nativeAmount,
+                comment ?? string.Empty, commentTo ?? string.Empty);
         }
 
         public Task<JsonRpcResponse<bool>> GetGenerateAsync()
@@ -141,6 +177,13 @@ namespace MultiChainLib
                 commentTo, startBlock, endBlock);*/
         }
 
+        public Task<JsonRpcResponse<string>> IssueFromAsync(string fromAddress, string toAddress, string assetName, int quantity, decimal units,
+            decimal nativeAmount = 0, string comment = null, string commentTo = null, int startBlock = 0, int endBlock = 0)
+        {
+            return this.ExecuteAsync<string>("issuefrom", 0, fromAddress, toAddress, assetName, quantity, units); /*, nativeAmount, comment,
+                commentTo, startBlock, endBlock);*/
+        }
+
         public Task<JsonRpcResponse<List<AssetResponse>>> ListAssetsAsync()
         {
             return this.ExecuteAsync<List<AssetResponse>>("listassets", 0);
@@ -155,12 +198,30 @@ namespace MultiChainLib
                 commentTo ?? string.Empty, startBlock, endBlock);*/
         }
 
+        public Task<JsonRpcResponse<string>> RevokeAsync(IEnumerable<string> addresses, BlockchainPermissions permissions, decimal nativeAmount = 0M, string comment = null,
+            string commentTo = null, int startBlock = 0, int endBlock = 0)
+        {
+            var stringifiedAddresses = this.StringifyValues(addresses);
+            var permissionsAsString = this.FormatPermissions(permissions);
+            return this.ExecuteAsync<string>("revoke", 0, stringifiedAddresses, permissionsAsString); /*, nativeAmount, comment ?? string.Empty, 
+                commentTo ?? string.Empty, startBlock, endBlock);*/
+        }
+
         public Task<JsonRpcResponse<string>> GrantFromAsync(string fromAddress, IEnumerable<string> toAddresses, BlockchainPermissions permissions, decimal nativeAmount = 0M, 
             string comment = null, string commentTo = null, int startBlock = 0, int endBlock = 0)
         {
             var stringifiedAddresses = this.StringifyValues(toAddresses);
             var permissionsAsString = this.FormatPermissions(permissions);
             return this.ExecuteAsync<string>("grantfrom", 0, fromAddress, stringifiedAddresses, permissionsAsString); /*, nativeAmount, comment ?? string.Empty, 
+                commentTo ?? string.Empty, startBlock, endBlock);*/
+        }
+
+        public Task<JsonRpcResponse<string>> RevokeFromAsync(string fromAddress, IEnumerable<string> toAddresses, BlockchainPermissions permissions, decimal nativeAmount = 0M,
+            string comment = null, string commentTo = null, int startBlock = 0, int endBlock = 0)
+        {
+            var stringifiedAddresses = this.StringifyValues(toAddresses);
+            var permissionsAsString = this.FormatPermissions(permissions);
+            return this.ExecuteAsync<string>("revokefrom", 0, fromAddress, stringifiedAddresses, permissionsAsString); /*, nativeAmount, comment ?? string.Empty, 
                 commentTo ?? string.Empty, startBlock, endBlock);*/
         }
 
@@ -203,7 +264,17 @@ namespace MultiChainLib
             return builder.ToString();
         }
 
-        public Task<JsonRpcResponse<VerboseTransactionResponse>> GetRawTransaction(string txId)
+        public Task<JsonRpcResponse<string>> GetRawTransactionAsync(string txId)
+        {
+            return this.ExecuteAsync<string>("getrawtransaction", 0, txId, 0);
+        }
+
+        public Task<JsonRpcResponse<VerboseTransactionResponse>> DecodeRawTransactionAsync(string data)
+        {
+            return this.ExecuteAsync<VerboseTransactionResponse>("decoderawtransaction", 0, data);
+        }
+
+        public Task<JsonRpcResponse<VerboseTransactionResponse>> GetRawTransactionVerboseAsync(string txId)
         {
             return this.ExecuteAsync<VerboseTransactionResponse>("getrawtransaction", 0, txId, 1);
         }
@@ -375,9 +446,19 @@ namespace MultiChainLib
             return this.ExecuteAsync<string>("importaddress", 0, address, account ?? string.Empty, rescan);
         }
 
+        public Task<JsonRpcResponse<string>> ImportPrivKey(string key, string account = null, bool rescan = true)
+        {
+            return this.ExecuteAsync<string>("importprivkey", 0, key, account ?? string.Empty, rescan);
+        }
+
         public Task<JsonRpcResponse<string>> GetAccountAsync(string address)
         {
             return this.ExecuteAsync<string>("getaccount", 0, address);
+        }
+
+        public Task<JsonRpcResponse<string>> SetAccountAsync(string address, string account)
+        {
+            return this.ExecuteAsync<string>("setaccount", 0, address, account);
         }
 
         public Task<JsonRpcResponse<string>> GetAccountAddressAsync(string account)
@@ -403,6 +484,11 @@ namespace MultiChainLib
         public Task<JsonRpcResponse<ListSinceLastBlockResponse>> ListSinceBlockAsync(string hash, int confirmations = 1, bool watchOnly = false)
         {
             return this.ExecuteAsync<ListSinceLastBlockResponse>("listsinceblock", 0, hash, confirmations, watchOnly);
+        }
+
+        public Task<JsonRpcResponse<List<UnspentResponse>>> ListUnspentAsync(int minConf = 1, int maxConf = 999999, IEnumerable<string> addresses = null)
+        {
+            return this.ExecuteAsync<List<UnspentResponse>>("listunspent", 0, minConf, maxConf);
         }
 
         public Task<JsonRpcResponse<List<string>>> ListLockUnspentAsync()
@@ -435,6 +521,16 @@ namespace MultiChainLib
             return this.ExecuteAsync<string>("dumpwallet", 0, path);
         }
 
+        public Task<JsonRpcResponse<string>> ImportWallet(string path)
+        {
+            return this.ExecuteAsync<string>("importwallet", 0, path);
+        }
+
+        public Task<JsonRpcResponse<string>> EncryptWalletAsync(string passphrase)
+        {
+            return this.ExecuteAsync<string>("encryptwallet", 0, passphrase);
+        }
+
         public Task<JsonRpcResponse<string>> DumpPrivKeyAsync(string address)
         {
             return this.ExecuteAsync<string>("dumpprivkey", 0, address);
@@ -463,6 +559,21 @@ namespace MultiChainLib
         public Task<JsonRpcResponse<List<string>>> GetAddedNodeInfoDetailsAsync(string node)
         {
             return this.ExecuteAsync<List<string>>("getaddednodeinfo", 0, true, node);
+        }
+
+        public Task<JsonRpcResponse<MultiSigResponse>> CreateMultiSigAsync(int numRequired, IEnumerable<string> addresses)
+        {
+            return this.ExecuteAsync<MultiSigResponse>("createmultisig", 0, numRequired, addresses);
+        }
+
+        public Task<JsonRpcResponse<ScriptResponse>> DecodeScriptAsync(string decodeScript)
+        {
+            return this.ExecuteAsync<ScriptResponse>("decodescript", 0, decodeScript);
+        }
+
+        public Task<JsonRpcResponse<string>> AddMultiSigAddressAsync(int numRequired, IEnumerable<string> addresses, string account = null)
+        {
+            return this.ExecuteAsync<string>("addmultisigaddress", 0, numRequired, addresses, account ?? string.Empty);
         }
 
         public Task<JsonRpcResponse<string>> HelpAsync()
