@@ -386,6 +386,11 @@ namespace MultiChainLib
             return this.ExecuteAsync<long>("getnetworkhashps", 0, blocks, height);
         }
 
+        public Task<JsonRpcResponse<bool>> SetTxFeeAsync(decimal fee)
+        {
+            return this.ExecuteAsync<bool>("settxfee", 0, fee);
+        }
+
         public Task<JsonRpcResponse<List<AssetBalanceResponse>>> GetTotalBalancesAsync(int confirmations = 1, bool watchOnly = false, bool locked = false)
         {
             return this.ExecuteAsync<List<AssetBalanceResponse>>("gettotalbalances", 0, confirmations, watchOnly, locked);

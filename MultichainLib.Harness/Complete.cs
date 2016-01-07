@@ -12,7 +12,7 @@ namespace MultiChainLib.Harness
     {
         internal async Task RunAsync()
         {
-            var client = new MultiChainClient("192.168.40.130", 50001, false, "multichainrpc", "J1Bs45oEms6LRCcUw7CykoZ9ccUCTJbuwfdktk4N7M1Q", "chain_b82037073985329be60ae98e30");
+            var client = new MultiChainClient("192.168.40.131", 50001, false, "multichainrpc", "J1Bs45oEms6LRCcUw7CykoZ9ccUCTJbuwfdktk4N7M1Q", "chain_b82037073985329be60ae98e30");
             //var client = new MultiChainClient("localhost", 8911, false, null, null, "chain_600bf49a419e7fb3fa0530de6e", "7ae614be3a222c8ef0f337504d046b46805baaa7f787381db33cb2e1f4b562e6");
             //var client = new MultiChainClient("rpc.pbjcloud.com", 443, true, null, null, "chain_4662dcf2e58c1daf3a5a2cf0e0", "23da5aecda55b1dd0613018265a35a0673f73398c571f5e295f9dd2a6ec64fd2");
 
@@ -84,12 +84,19 @@ namespace MultiChainLib.Harness
             Console.WriteLine(getNetworkHashPs.Result);
             Console.WriteLine();
 
-            //// getblocktemplate...
-            //Console.WriteLine("*** getblocktemplate ***");
-            //var getBlockTemplate = await client.GetBlockTemplateAsync();
-            //getBlockTemplate.AssertOk();
-            //Console.WriteLine(getBlockTemplate.Result);
-            //Console.WriteLine();
+            // getnetworkhashps...
+            Console.WriteLine("*** settxfee ***");
+            var setTxFee = await client.SetTxFeeAsync(0.001M);
+            setTxFee.AssertOk();
+            Console.WriteLine(setTxFee.Result);
+            Console.WriteLine();
+
+            // getblocktemplate...
+            Console.WriteLine("*** getblocktemplate ***");
+            var getBlockTemplate = await client.GetBlockTemplateAsync();
+            getBlockTemplate.AssertOk();
+            Console.WriteLine(getBlockTemplate.Result);
+            Console.WriteLine();
 
             // getbestblockhash...
             Console.WriteLine("*** getbestblockhash ***");
