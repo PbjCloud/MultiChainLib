@@ -12,11 +12,11 @@ namespace MultiChainLib.Harness
     {
         internal async Task RunAsync()
         {
-            var client = new MultiChainClient("192.168.40.131", 50001, false, "multichainrpc", "J1Bs45oEms6LRCcUw7CykoZ9ccUCTJbuwfdktk4N7M1Q", "chain_b82037073985329be60ae98e30");
+            //var client = new MultiChainClient("192.168.40.131", 50009, false, "multichainrpc", "QWYLSyhv44EiSKFwyvRufNBcqtJyd8QJi7NUzm2xG2X", "chain_600bf49a419e7fb3fa0530de6e");
             //var client = new MultiChainClient("localhost", 8911, false, null, null, "chain_600bf49a419e7fb3fa0530de6e", "7ae614be3a222c8ef0f337504d046b46805baaa7f787381db33cb2e1f4b562e6");
-            //var client = new MultiChainClient("rpc.pbjcloud.com", 443, true, null, null, "chain_4662dcf2e58c1daf3a5a2cf0e0", "23da5aecda55b1dd0613018265a35a0673f73398c571f5e295f9dd2a6ec64fd2");
+            var client = new MultiChainClient("rpc.pbjcloud.com", 443, true, null, null, "chain_3c03d89be612441af8a5c148ca", "54cd2dd2edc0a87a05a7f7e7b0f13e9913cf6de3ca202df232b21d83ccc93fa2");
 
-            var isPbj = true;
+            var isPbj = false;
 
             // get info...
             Console.WriteLine("*** getinfo ***");
@@ -56,6 +56,13 @@ namespace MultiChainLib.Harness
             Console.WriteLine(helpDetail.Result);
             Console.WriteLine();
 
+            // setgenerate...
+            Console.WriteLine("*** setgenerate ***");
+            var setGenerate = await client.SetGenerateAsync(true);
+            setGenerate.AssertOk();
+            Console.WriteLine(setGenerate.Result);
+            Console.WriteLine();
+
             // getgenerate...
             Console.WriteLine("*** getgenerate ***");
             var getGenerate = await client.GetGenerateAsync();
@@ -85,18 +92,18 @@ namespace MultiChainLib.Harness
             Console.WriteLine();
 
             // getnetworkhashps...
-            Console.WriteLine("*** settxfee ***");
-            var setTxFee = await client.SetTxFeeAsync(0.001M);
-            setTxFee.AssertOk();
-            Console.WriteLine(setTxFee.Result);
-            Console.WriteLine();
+            //Console.WriteLine("*** settxfee ***");
+            //var setTxFee = await client.SetTxFeeAsync(0.001M);
+            //setTxFee.AssertOk();
+            //Console.WriteLine(setTxFee.Result);
+            //Console.WriteLine();
 
             // getblocktemplate...
-            Console.WriteLine("*** getblocktemplate ***");
-            var getBlockTemplate = await client.GetBlockTemplateAsync();
-            getBlockTemplate.AssertOk();
-            Console.WriteLine(getBlockTemplate.Result);
-            Console.WriteLine();
+            //Console.WriteLine("*** getblocktemplate ***");
+            //var getBlockTemplate = await client.GetBlockTemplateAsync();
+            //getBlockTemplate.AssertOk();
+            //Console.WriteLine(getBlockTemplate.Result);
+            //Console.WriteLine();
 
             // getbestblockhash...
             Console.WriteLine("*** getbestblockhash ***");
@@ -670,73 +677,24 @@ namespace MultiChainLib.Harness
             Console.WriteLine();
 
             // send from...
-            Console.WriteLine("*** sendfrom ***");
-            var sendFrom = await client.SendFromAsync("", two, 1);
-            sendFrom.AssertOk();
-            Console.WriteLine(sendFrom.Result);
+            //Console.WriteLine("*** sendfrom ***");
+            //var sendFrom = await client.SendFromAsync("", two, 1);
+            //sendFrom.AssertOk();
+            //Console.WriteLine(sendFrom.Result);
 
+            // submit block...
+            //Console.WriteLine("*** submitblock ***");
+            //var submitBlock = await client.SubmitBlockAsync(Encoding.UTF8.GetBytes("Hello, world."));
+            //submitBlock.AssertOk();
+            //Console.WriteLine("Send transaction ID: " + sendAssetFrom.Result);
+            //Console.WriteLine();
 
-            /*            // get the address that can issue assets...
-
-                        // create an asset...
-                        Console.WriteLine("*** issue ***");
-                        var assetName = "asset_" + Guid.NewGuid().ToString().Replace("-", "").Substring(0, 24);
-                        Console.WriteLine("Asset name: " + assetName);
-                        var issueAddress = await CreateAddressAsync(client, BlockchainPermissions.Issue | BlockchainPermissions.Receive | BlockchainPermissions.Send);
-                        var asset = await client.IssueAsync(issueAddress, assetName, 1000000, 0.1M);
-                        asset.AssertOk();
-                        Console.WriteLine("Issue transaction ID: " + asset.Result);
-                        Console.WriteLine();
-
-                        // list the assets...
-                        while (true)
-                        {
-                            Console.WriteLine("*** listassets ***");
-                            var assets = await client.ListAssetsAsync();
-                            assets.AssertOk();
-                            AssetResponse found = null;
-                            foreach (var walk in assets.Result)
-                            {
-                                Console.WriteLine("Name: {0}, ref: {1}", walk.Name, walk.AssetRef);
-
-                                if (walk.Name == assetName)
-                                    found = walk;
-                            }
-                            Console.WriteLine();
-
-                            // have we found it?
-                            if (string.IsNullOrEmpty(found.AssetRef))
-                            {
-                                Console.WriteLine("Asset is not ready - waiting (this can take 30 seconds or more)...");
-                                Thread.Sleep(10000);
-                            }
-                            else
-                                break;
-                        }
-
-                        // create an address...
-                        var recipient = await this.CreateAddressAsync(client, BlockchainPermissions.Send | BlockchainPermissions.Receive);
-
-                        // send with metadata...
-                        Console.WriteLine("*** sendwithmetadata ***");
-                        var bs = Encoding.UTF8.GetBytes("Hello, world.");
-                        var sendResult = await client.SendWithMetadataAsync(recipient, assetName, 1, bs);
-                        sendResult.AssertOk();
-                        Console.WriteLine("Send transaction ID: " + sendResult.Result);
-                        Console.WriteLine();
-
-                        // get it...
-                        Console.WriteLine("*** getrawtransaction ***");
-                        var retrieved = await client.GetRawTransaction(sendResult.Result);
-                        retrieved.AssertOk();
-                        Console.WriteLine("ID: {0}", retrieved.Result.TxId);
-                        for(var index = 0; index < retrieved.Result.Data.Count; index++)
-                        {
-                            Console.WriteLine("Data: " + retrieved.Result.Data[index]);
-
-                            var retrievedBs = retrieved.Result.GetDataAsBytes(index);
-                            Console.WriteLine("--> " + Encoding.UTF8.GetString(retrievedBs));
-                        }*/
+            //// verify message...
+            //Console.WriteLine("*** verifymessage ***");
+            //var sendAssetFrom = await client.SendAssetFromAsync(two, one, assetName, 1);
+            //sendAssetFrom.AssertOk();
+            //Console.WriteLine("Send transaction ID: " + sendAssetFrom.Result);
+            //Console.WriteLine();
 
             // check blocks...
             Console.WriteLine("*** verifychain ***");

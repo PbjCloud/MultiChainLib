@@ -9,6 +9,16 @@ namespace MultiChainLib.Harness
 {
     public class Example
     {
+        //internal async Task DoMagic()
+        //{
+        //    // connect to the client...
+        //    var client = new MultiChainClient("192.168.40.130", 50001, false, "rpc_username", "rpc_password", "the_chain_name");
+
+        //    // get some info back...
+        //    var info = await client.GetInfoAsync();
+        //    Console.WriteLine("Chain: {0}, difficulty: {1}", info.Result.ChainName, info.Result.Difficulty);
+        //}
+
         internal async Task RunAsync()
         {
             var client = new MultiChainClient("192.168.40.130", 50001, false, "multichainrpc", "J1Bs45oEms6LRCcUw7CykoZ9ccUCTJbuwfdktk4N7M1Q", "chain_b82037073985329be60ae98e30");

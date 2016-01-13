@@ -53,7 +53,7 @@ namespace MultiChainLib
         {
             var theAmount = new Dictionary<string, object>();
             theAmount[assetName] = amount;
-            return this.ExecuteAsync<string>("sendwithmetadata", 0, address, theAmount, this.FormatHex(dataHex));
+            return this.ExecuteAsync<string>("sendwithmetadata", 0, address, theAmount, FormatHex(dataHex));
         }
 
         public Task<JsonRpcResponse<string>> SendToAddressAsync(string address, string assetName, decimal amount, string comment = null,
@@ -69,7 +69,7 @@ namespace MultiChainLib
         {
             var theAmount = new Dictionary<string, object>();
             theAmount[assetName] = amount;
-            return this.ExecuteAsync<string>("sendwithmetadatafrom", 0, fromAddress, toAddress, theAmount, this.FormatHex(dataHex));
+            return this.ExecuteAsync<string>("sendwithmetadatafrom", 0, fromAddress, toAddress, theAmount, FormatHex(dataHex));
         }
 
         public Task<JsonRpcResponse<string>> SendAssetToAddressAsync(string address, string assetName, decimal quantity, 
@@ -90,6 +90,12 @@ namespace MultiChainLib
         {
             return this.ExecuteAsync<bool>("getgenerate", 0);
         }
+
+        public Task<JsonRpcResponse<string>> SetGenerateAsync(bool generate)
+        {
+            return this.ExecuteAsync<string>("setgenerate", 0, generate);
+        }
+
 
         public Task<JsonRpcResponse<int>> GetHashesPerSecAsync()
         {
@@ -156,7 +162,7 @@ namespace MultiChainLib
             return this.ExecuteAsync<BlockResponse>("getblock", 0, hash, true);
         }
 
-        internal static byte[] ParseHexString(string hex)
+        public static byte[] ParseHexString(string hex)
         {
             var bs = new List<byte>();
             for (var index = 0; index < hex.Length; index += 2)
@@ -376,6 +382,24 @@ namespace MultiChainLib
             return this.ExecuteAsync<bool>("verifychain", 0, (int)type, numBlocks);
         }
 
+        // not implemented -- contact us with specific implementation requirements and we'll implement this...
+        public Task<JsonRpcResponse<string>> CreateRawTransactionAync()
+        {
+            throw new NotImplementedException("This operation has not been implemented.");
+        }
+
+        // not implemented -- contact us with specific implementation requirements and we'll implement this...
+        public Task<JsonRpcResponse<string>> SendRawTransactionAsync()
+        {
+            throw new NotImplementedException("This operation has not been implemented.");
+        }
+
+        // not implemented -- contact us with specific implementation requirements and we'll implement this...
+        public Task<JsonRpcResponse<string>> SignRawTransactionAsync()
+        {
+            throw new NotImplementedException("This operation has not been implemented.");
+        }
+
         public Task<JsonRpcResponse<bool>> PrioritiseTransactionAsync(string txId, decimal priority, int feeSatoshis)
         {
             return this.ExecuteAsync<bool>("prioritisetransaction", 0, txId, priority, feeSatoshis);
@@ -571,6 +595,14 @@ namespace MultiChainLib
             return this.ExecuteAsync<MultiSigResponse>("createmultisig", 0, numRequired, addresses);
         }
 
+        public Task<JsonRpcResponse<string>> SubmitBlockAsync(byte[] bs, object args = null)
+        {
+            if (args != null)
+                return this.ExecuteAsync<string>("submitblock", 0, bs, args);
+            else
+                return this.ExecuteAsync<string>("submitblock", 0, bs);
+        }
+
         public Task<JsonRpcResponse<ScriptResponse>> DecodeScriptAsync(string decodeScript)
         {
             return this.ExecuteAsync<ScriptResponse>("decodescript", 0, decodeScript);
@@ -596,7 +628,7 @@ namespace MultiChainLib
             return this.ExecuteAsync<object>("stop", 0);
         }
 
-        private string FormatHex(byte[] bs)
+        public static string FormatHex(byte[] bs)
         {
             StringBuilder builder = new StringBuilder();
             foreach (var b in bs)

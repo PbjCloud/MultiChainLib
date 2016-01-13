@@ -31,6 +31,6 @@ namespace MultiChainLib
         public decimal IssueQty { get; set; }
 
         [JsonProperty("issueraw")]
-        public int IssueRaw { get; set; }
+        public long IssueRaw { get; set; }
     }
 }
